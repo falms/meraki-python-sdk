@@ -28,3 +28,6 @@ class Configuration(object):
     # TODO: Set an appropriate value
     x_cisco_meraki_api_key = None
 
+    # For Email/Password login
+    login_email = None
+    login_password = None
