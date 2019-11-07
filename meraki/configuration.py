@@ -24,6 +24,7 @@ class Configuration(object):
 
     # The base Uri for API calls
     base_uri = 'https://api.meraki.com/api/v0'
+    dash_uri = 'https://dashboard.meraki.com'
 
     # TODO: Set an appropriate value
     x_cisco_meraki_api_key = None
