@@ -7,6 +7,7 @@
 """
 
 from meraki.configuration import Configuration
+from meraki.http.http_method_enum import HttpMethodEnum
 
 
 class CustomHeaderAuth:
@@ -21,3 +22,6 @@ class CustomHeaderAuth:
 
         """                
         http_request.add_header("X-Cisco-Meraki-API-Key", Configuration.x_cisco_meraki_api_key)
+
+        if http_request.http_method not in [HttpMethodEnum.GET, HttpMethodEnum.HEAD]:
+            http_request.add_header("X-CSRF-Token", Configuration.csrf_token)

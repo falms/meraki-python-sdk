@@ -32,3 +32,6 @@ class Configuration(object):
     # For Email/Password login
     login_email = None
     login_password = None
+
+    # CSRF Token
+    csrf_token = None
