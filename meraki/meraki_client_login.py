@@ -24,6 +24,5 @@ class MerakiClientLogin(MerakiClient):
     def guests(self):
         return GuestsController()
 
-    def __init__(self, email=None, password=None):
-        Configuration.login_email = email
-        Configuration.login_password = password
+    def __init__(self):
+        pass

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from urllib.parse import urlparse
 
 from meraki.api_helper import APIHelper
 from meraki.configuration import Configuration
@@ -8,7 +7,7 @@ from meraki.controllers.base_controller import BaseController
 
 class LoginController(BaseController):
 
-    def login(self):
+    def login(self, email=None, password=None, edition='Enterprise'):
         _url_path = '/login/login'
         _query_builder = Configuration.dash_uri
         _query_builder += _url_path
@@ -17,12 +16,12 @@ class LoginController(BaseController):
         _headers = {
             'accept': 'application/json',
             'content-type': 'application/json; charset=utf-8',
-            'x-meraki-user-agent': 'DashboardMobile'
+            'x-meraki-user-agent': 'DashboardMobile.' + edition
         }
 
         _login = {
-            'email': Configuration.login_email,
-            'password': Configuration.login_password
+            'email': email,
+            'password': password
         }
 
         _request = self.http_client.post(_query_url, headers=_headers, parameters=APIHelper.json_serialize(_login))
@@ -32,8 +31,7 @@ class LoginController(BaseController):
         _response = APIHelper.json_deserialize(_context.response.raw_body)
 
         # Set shard uri for later API calls
-        _url_components = urlparse(_response['user']['path'])
-        _shard_origin = _url_components.scheme + '://' + _url_components.netloc
+        _shard_origin = 'https://n{}.meraki.com'.format(_response['orgs'][0]['shard_id'])
         Configuration.base_uri = _shard_origin + '/api/v0'
         Configuration.dash_uri = _shard_origin
 
