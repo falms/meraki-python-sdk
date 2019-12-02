@@ -34,6 +34,11 @@ class LoginController(BaseController):
 
         _response = APIHelper.json_deserialize(_context.response.raw_body)
 
+        if _response.get('mode') == 'two_factor':
+            if 'code' not in options.keys():
+                raise APIException('2FA code is required.', _context)
+            _response = self.do_sms_auth(options.get('code'))
+
         if _response.get('mode') == 'org_choose':
             if 'eid' not in options.keys():
                 _eids = list(map(lambda org: org['eid'], _response.get('orgs')))
@@ -54,6 +59,29 @@ class LoginController(BaseController):
         Configuration.dash_uri = _shard_origin
 
         return _response
+
+    def do_sms_auth(self, code=None):
+        _url_path = '/login/do_sms_auth'
+        _query_builder = Configuration.dash_uri
+        _query_builder += _url_path
+        _query_url = APIHelper.clean_url(_query_builder)
+
+        _headers = {
+            'accept': 'application/json',
+            'content-type': 'application/json; charset=utf-8'
+        }
+
+        _params = {
+            'code': code
+        }
+
+        _request = self.http_client.post(_query_url, headers=_headers,
+                                         parameters=APIHelper.json_serialize(_params))
+        CustomHeaderAuth.apply(_request)
+        _context = self.execute_request(_request)
+        self.validate_response(_context)
+
+        return APIHelper.json_deserialize(_context.response.raw_body)
 
     def org_choose(self, eid=None):
         _url_path = '/login/org_choose'
