@@ -51,6 +51,4 @@ class LoginController(BaseController):
         _context = self.execute_request(_request)
         self.validate_response(_context)
 
-        _response = APIHelper.json_deserialize(_context.response.raw_body)
-
         return APIHelper.json_deserialize(_context.response.raw_body)
