@@ -7,16 +7,18 @@ from meraki.controllers.base_controller import BaseController
 
 class LoginController(BaseController):
 
-    def login(self, email=None, password=None, edition='Enterprise'):
+    def login(self, email=None, password=None, options=dict()):
         _url_path = '/login/login'
         _query_builder = Configuration.dash_uri
         _query_builder += _url_path
         _query_url = APIHelper.clean_url(_query_builder)
 
+        _edition = options.get('edition', 'Enterprise')
+
         _headers = {
             'accept': 'application/json',
             'content-type': 'application/json; charset=utf-8',
-            'x-meraki-user-agent': 'DashboardMobile.' + edition
+            'x-meraki-user-agent': 'DashboardMobile.' + _edition
         }
 
         _login = {
